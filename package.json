@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently \"tsc -w\" \"bun --hot src/server.ts\"",
     "build": "tsc",
-    "start": "bun dist/server.js"
+    "start": "bun dist/server.js",
+    "seed": "bun src/app/seeds/main.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

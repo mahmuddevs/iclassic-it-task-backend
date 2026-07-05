@@ -1,5 +1,14 @@
+import dns from "node:dns";
 import mongoose from 'mongoose';
 import { env } from './env.js';
+
+// Configure DNS to resolve IPv4 first and use fallback public DNS servers
+dns.setDefaultResultOrder("ipv4first");
+try {
+  dns.setServers(["1.1.1.1", "8.8.8.8"]);
+} catch (error) {
+  // Ignore if setServers is not supported in the runtime environment
+}
 
 const connectDB = async () => {
   try {
