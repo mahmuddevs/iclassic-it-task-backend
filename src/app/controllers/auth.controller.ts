@@ -59,10 +59,12 @@ const login = async (req: Request, res: Response) => {
       refreshToken
     });
 
+    const userWithPermissions = await AuthService.getUserWithPermissions(user.email);
+
     return response.success(res, {
       message: "User logged in successfully",
       data: {
-        user: AuthService.getFormattedUser(user),
+        user: userWithPermissions,
       },
       statusCode: 200,
       cookie: AuthService.getCookieConfig([
@@ -121,10 +123,12 @@ const register = async (req: Request, res: Response) => {
       refreshToken
     });
 
+    const userWithPermissions = await AuthService.getUserWithPermissions(user.email);
+
     return response.success(res, {
       message: "User registered successfully",
       data: {
-        user: AuthService.getFormattedUser(user),
+        user: userWithPermissions,
       },
       statusCode: 201,
       cookie: AuthService.getCookieConfig([
@@ -197,7 +201,7 @@ const verifyAuth = async (req: Request, res: Response) => {
       });
     }
 
-    const user = await AuthService.findUserByEmail(payload.email);
+    const user = await AuthService.getUserWithPermissions(payload.email);
 
     if (!user) {
       logger.warn(`[verifyAuth] User not found for email: ${payload.email}`);
@@ -211,7 +215,7 @@ const verifyAuth = async (req: Request, res: Response) => {
     return response.success(res, {
       message: "Authentication verified",
       data: {
-        user: AuthService.getFormattedUser(user),
+        user,
       },
     });
   } catch (err: any) {

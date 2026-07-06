@@ -25,7 +25,7 @@ productRoutes.post(
   createProduct
 )
 
-productRoutes.put(
+productRoutes.patch(
   "/:id",
   authorize("products.update"),
   setUploadDir("uploads/products"),

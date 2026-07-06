@@ -23,6 +23,20 @@ export const seedRoles = async () => {
 
   const adminPermIds = adminPermissions.map(p => p._id);
 
+  // 2. Get permissions for Manager (product CRUD)
+  const managerPermissions = await Permission.find({
+    name: {
+      $in: [
+        "products.create",
+        "products.read",
+        "products.update",
+        "products.delete"
+      ]
+    }
+  });
+
+  const managerPermIds = managerPermissions.map(p => p._id);
+
   const roles = [
     {
       name: "Admin",
@@ -32,7 +46,7 @@ export const seedRoles = async () => {
     {
       name: "Manager",
       description: "Manager with medium level access",
-      permissions: []
+      permissions: managerPermIds
     },
     {
       name: "Employee",

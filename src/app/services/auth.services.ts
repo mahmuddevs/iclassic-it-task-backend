@@ -22,6 +22,49 @@ export const AuthService = {
     return await User.findOne({ email }).select("+password");
   },
 
+  getUserWithPermissions: async (email: string) => {
+    const users = await User.aggregate([
+      { $match: { email } },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "role",
+          foreignField: "name",
+          as: "roleData",
+        },
+      },
+      { $unwind: { path: "$roleData", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "permissions",
+          let: { rolePerms: { $ifNull: ["$roleData.permissions", []] } },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $in: ["$_id", "$$rolePerms"] },
+              },
+            },
+            { $project: { name: 1, module: 1, _id: 0 } },
+          ],
+          as: "permissions",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          firstName: 1,
+          lastName: 1,
+          email: 1,
+          role: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          permissions: 1,
+        },
+      },
+    ]);
+    return users[0] ?? null;
+  },
+
   getCookieConfig: (
     cookies: { name: string; value: string; expiration: string }[]
   ) => {
