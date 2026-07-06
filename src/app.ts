@@ -23,6 +23,7 @@ if (env.nodeEnv === "production") {
 const allowedOrigins = [
   env.clientUrl,
   "http://localhost:3000",
+  "http://localhost:5173"
 ];
 
 // Extract the base domain from CLIENT_URL to allow subdomains
@@ -67,14 +68,14 @@ app.use(helmet());
 app.use(express.json());
 
 // rate limiter
-const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 10,
-  keyGenerator: (req: Request) => {
-    return `${ipKeyGenerator(req.ip || "")}:${req.originalUrl}`;
-  },
-});
-app.use(limiter);
+// const limiter = rateLimit({
+//   windowMs: 60 * 1000,
+//   max: 10,
+//   keyGenerator: (req: Request) => {
+//     return `${ipKeyGenerator(req.ip || "")}:${req.originalUrl}`;
+//   },
+// });
+// app.use(limiter);
 
 // Parse cookies
 app.use(cookieParser());

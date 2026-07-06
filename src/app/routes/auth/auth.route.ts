@@ -12,7 +12,7 @@ import { LoginSchema, UserSchema } from "../../schemas/user.schema.js";
 
 const authRoutes = Router();
 
-authRoutes.post("/", authorize(), verifyAuth)
+authRoutes.post("/", verifyAuth)
 
 authRoutes.post("/login", validate(LoginSchema), login)
 

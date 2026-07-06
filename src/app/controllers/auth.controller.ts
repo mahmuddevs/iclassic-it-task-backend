@@ -223,7 +223,6 @@ const verifyAuth = async (req: Request, res: Response) => {
   }
 };
 
-
 const logout = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
 
