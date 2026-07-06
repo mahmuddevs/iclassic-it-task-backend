@@ -13,6 +13,8 @@ export const seedPermissions = async () => {
     { name: "products.read", module: "products" },
     { name: "products.update", module: "products" },
     { name: "products.delete", module: "products" },
+    { name: "sales.create", module: "sales" },
+    { name: "sales.read", module: "sales" },
   ];
 
   for (const perm of permissions) {

@@ -16,26 +16,41 @@ export const seedRoles = async () => {
         "products.create",
         "products.read",
         "products.update",
-        "products.delete"
+        "products.delete",
+        "sales.create",
+        "sales.read"
       ]
     }
   });
 
   const adminPermIds = adminPermissions.map(p => p._id);
 
-  // 2. Get permissions for Manager (product CRUD)
+  // 2. Get permissions for Manager (product CRUD & Sales)
   const managerPermissions = await Permission.find({
     name: {
       $in: [
         "products.create",
         "products.read",
         "products.update",
-        "products.delete"
+        "products.delete",
+        "sales.create",
+        "sales.read"
       ]
     }
   });
 
   const managerPermIds = managerPermissions.map(p => p._id);
+
+  // 3. Get permissions for Employee (Sales only)
+  const employeePermissions = await Permission.find({
+    name: {
+      $in: [
+        "sales.create",
+      ]
+    }
+  });
+
+  const employeePermIds = employeePermissions.map(p => p._id);
 
   const roles = [
     {
@@ -51,7 +66,7 @@ export const seedRoles = async () => {
     {
       name: "Employee",
       description: "Regular employee access",
-      permissions: []
+      permissions: employeePermIds
     },
   ];
 
