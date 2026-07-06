@@ -64,7 +64,12 @@ app.use(
   }),
 );
 // Parse JSON bodies
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+
 app.use(express.json());
 
 // rate limiter

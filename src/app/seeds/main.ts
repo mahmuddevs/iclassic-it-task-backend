@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { seedPermissions } from "./permissions.seed.js";
 import { seedRoles } from "./roles.seed.js";
 import { seedUsers } from "./users.seed.js";
+import { seedProducts } from "./products.seed.js";
 import connectDB from "../config/db-config.js";
 
 const runAllSeeds = async () => {
@@ -19,6 +20,9 @@ const runAllSeeds = async () => {
 
     // 3. Seed Users (depends on Roles)
     await seedUsers();
+
+    // 4. Seed Products
+    await seedProducts();
 
     console.log("=== Database Seeding Completed Successfully ===");
     await mongoose.connection.close();

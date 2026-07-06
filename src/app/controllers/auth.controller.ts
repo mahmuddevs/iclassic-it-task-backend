@@ -266,6 +266,7 @@ const refreshAccessToken = async (req: Request, res: Response) => {
   const { accessToken, refreshToken } = req.cookies;
   const logout = AuthService.getLogoutCookieConfig(["accessToken", "refreshToken"]);
 
+  // 1. First check if the session is active or not
   if (!refreshToken) {
     return response.error(res, { message: "Session expired", statusCode: 401, cookie: logout });
   }
@@ -284,6 +285,7 @@ const refreshAccessToken = async (req: Request, res: Response) => {
 
     if (!session) throw new Error("Revoked");
 
+    // 2. Access token ones
     if (!accessToken) {
       return response.error(res, { message: "Access token missing", statusCode: 401, cookie: logout });
     }
@@ -321,4 +323,6 @@ const refreshAccessToken = async (req: Request, res: Response) => {
     });
   }
 };
+
+
 export { login, register, verifyAuth, logout, refreshAccessToken };

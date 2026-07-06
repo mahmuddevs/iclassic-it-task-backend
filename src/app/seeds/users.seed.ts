@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 
 export const seedUsers = async () => {
   console.log("Seeding users...");
+  await User.deleteMany({});
 
   const users = [
     {
@@ -28,18 +29,8 @@ export const seedUsers = async () => {
   ];
 
   for (const userData of users) {
-    const existing = await User.findOne({ email: userData.email });
-    if (!existing) {
-      // User.create will trigger pre-save hook to hash password
-      await User.create(userData);
-    } else {
-      existing.firstName = userData.firstName;
-      existing.lastName = userData.lastName;
-      existing.role = userData.role;
-      // We only save if we want to update. Note that save() will trigger hashing if password is modified.
-      // But here password is not modified, so it won't be rehashed, which is correct.
-      await existing.save();
-    }
+    // User.create will trigger pre-save hook to hash password
+    await User.create(userData);
   }
 
   console.log("Users seeded successfully.");

@@ -3,10 +3,22 @@ import { Permission } from "../models/permission.model.js";
 
 export const seedRoles = async () => {
   console.log("Seeding roles...");
+  await Role.deleteMany({});
 
   // 1. Get permissions for Admin
   const adminPermissions = await Permission.find({
-    name: { $in: ["users.create", "users.read", "users.update", "users.delete"] }
+    name: {
+      $in: [
+        "users.create",
+        "users.read",
+        "users.update",
+        "users.delete",
+        "products.create",
+        "products.read",
+        "products.update",
+        "products.delete"
+      ]
+    }
   });
 
   const adminPermIds = adminPermissions.map(p => p._id);
