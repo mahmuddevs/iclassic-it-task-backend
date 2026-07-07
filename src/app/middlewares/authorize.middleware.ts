@@ -27,7 +27,6 @@ export const authorize = (requiredPermission?: string) => {
         return response.error(res, {
           message: "Session expired. Please log in again.",
           statusCode: 401,
-          // No cookie clearing — frontend refresh flow will handle token renewal
         });
       }
 

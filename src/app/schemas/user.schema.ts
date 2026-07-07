@@ -74,3 +74,9 @@ export const UpdateUserProfileSchema = z
   );
 
 export type UpdateUserProfileType = z.infer<typeof UpdateUserProfileSchema>;
+
+export const UpdateUserRoleSchema = z.object({
+  role: z.enum(["Admin", "Manager", "Employee"], {
+    message: "Role must be one of: Admin, Manager, Employee",
+  }),
+});

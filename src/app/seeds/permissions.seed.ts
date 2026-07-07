@@ -5,7 +5,6 @@ export const seedPermissions = async () => {
   await Permission.deleteMany({});
 
   const permissions = [
-    { name: "users.create", module: "users" },
     { name: "users.read", module: "users" },
     { name: "users.update", module: "users" },
     { name: "users.delete", module: "users" },
@@ -16,6 +15,8 @@ export const seedPermissions = async () => {
     { name: "sales.create", module: "sales" },
     { name: "sales.read", module: "sales" },
     { name: "sales.delete", module: "sales" },
+    { name: "permissions.read", module: "permissions" },
+    { name: "permissions.update", module: "permissions" },
   ];
 
   for (const perm of permissions) {

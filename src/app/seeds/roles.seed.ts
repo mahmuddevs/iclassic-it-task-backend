@@ -9,7 +9,6 @@ export const seedRoles = async () => {
   const adminPermissions = await Permission.find({
     name: {
       $in: [
-        "users.create",
         "users.read",
         "users.update",
         "users.delete",
@@ -19,7 +18,9 @@ export const seedRoles = async () => {
         "products.delete",
         "sales.create",
         "sales.read",
-        "sales.delete"
+        "sales.delete",
+        "permissions.read",
+        "permissions.update"
       ]
     }
   });
