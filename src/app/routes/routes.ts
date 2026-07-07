@@ -4,6 +4,7 @@ import userRoutes from "./users/user.route.js";
 import productRoutes from "./products/product.route.js";
 import saleRoutes from "./sales/sale.route.js";
 import roleRoutes from "./roles/role.route.js";
+import analyticsRoutes from "./analytics/analytics.route.js";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/users", userRoutes)
 router.use("/products", productRoutes)
 router.use("/sales", saleRoutes)
 router.use("/roles", roleRoutes)
+router.use("/analytics", analyticsRoutes)
 
 export default router;

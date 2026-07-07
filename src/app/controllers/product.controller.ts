@@ -194,3 +194,22 @@ export const deleteProduct = async (req: Request, res: Response) => {
     })
   }
 }
+
+// 6. Get All Unique Product Categories
+export const getProductCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await Product.distinct("category")
+    const filteredCategories = categories.filter((cat) => typeof cat === "string" && cat.trim() !== "")
+
+    return response.success(res, {
+      message: "Categories fetched successfully",
+      data: filteredCategories,
+      statusCode: 200,
+    })
+  } catch (error: any) {
+    return response.error(res, {
+      message: error.message || "Failed to fetch categories",
+      statusCode: 500,
+    })
+  }
+}

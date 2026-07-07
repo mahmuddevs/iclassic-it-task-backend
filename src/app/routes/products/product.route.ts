@@ -9,10 +9,12 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
+  getProductCategories,
 } from "../../controllers/product.controller.js"
 
 const productRoutes = Router()
 
+productRoutes.get("/categories", getProductCategories)
 productRoutes.get("/", authorize("products.read"), getAllProducts)
 productRoutes.get("/:id", authorize("products.read"), getProductById)
 
