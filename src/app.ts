@@ -20,7 +20,7 @@ if (env.nodeEnv === "production") {
 // Middleware
 // -----------------------------
 // CORS setup
-const allowedOrigins = [
+export const allowedOrigins = [
   env.clientUrl,
   "http://localhost:3000",
   "http://localhost:5173"
