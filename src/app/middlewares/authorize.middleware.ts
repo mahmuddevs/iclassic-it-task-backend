@@ -9,10 +9,11 @@ export const authorize = (requiredPermission?: string) => {
     const { accessToken } = req.cookies;
 
     if (!accessToken) {
+      const hasRefreshToken = !!req.cookies.refreshToken;
       return response.error(res, {
         message: "Authentication required. Please log in.",
         statusCode: 401,
-        cookie: AuthService.getLogoutCookieConfig(["accessToken", "refreshToken"]),
+        ...(!hasRefreshToken && { cookie: AuthService.getLogoutCookieConfig(["accessToken", "refreshToken"]) }),
       });
     }
 

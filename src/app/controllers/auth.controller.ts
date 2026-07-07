@@ -158,6 +158,12 @@ const verifyAuth = async (req: Request, res: Response) => {
   logger.info(`[verifyAuth] Received cookies - accessToken: ${accessToken ? "present" : "missing"}, refreshToken: ${refreshToken ? "present" : "missing"}`);
 
   if (!accessToken) {
+    if (refreshToken) {
+      return response.error(res, {
+        message: "Access token expired. Refresh required.",
+        statusCode: 401,
+      });
+    }
     return response.success(res, {
       message: "Authentication token missing",
       data: {
@@ -289,17 +295,8 @@ const refreshAccessToken = async (req: Request, res: Response) => {
 
     if (!session) throw new Error("Revoked");
 
-    // 2. Access token validation (if present, check if still valid)
-    if (accessToken) {
-      try {
-        await verifyToken(accessToken, env.accessTokenSecret);
-        return response.success(res, { message: "Token still valid" });
-      } catch (err: any) {
-        if (err.code !== "ERR_JWT_EXPIRED" && err.name !== "JWTExpired") {
-          return response.error(res, { message: "Invalid session", statusCode: 401, cookie: logout });
-        }
-      }
-    }
+    // Access token validation is no longer required during refresh.
+    // If the refresh token is valid and session is active, we always generate a new access token.
 
     const newAccessToken = await generateToken(
       { id: payload.id, email: payload.email },
