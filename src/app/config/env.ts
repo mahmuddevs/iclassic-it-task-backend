@@ -13,19 +13,7 @@ const getEnv = (key: string, fallback: string): string => {
   return val ? val.trim() : fallback;
 };
 
-const resolveCookieDomain = (): string | undefined => {
-  try {
-    const hostname = new URL(getEnv("CLIENT_URL", "")).hostname;
-    if (hostname && hostname !== "localhost" && hostname !== "127.0.0.1") {
-      const parts = hostname.split(".");
-      const rootDomain = parts.length > 2 ? parts.slice(-2).join(".") : hostname;
-      return "." + rootDomain;
-    }
-    return undefined;
-  } catch {
-    return undefined;
-  }
-};
+
 export const env = {
   nodeEnv: getEnv("NODE_ENV", "development"),
   clientUrl: getEnv("CLIENT_URL", "http://localhost:5173"),
@@ -39,5 +27,4 @@ export const env = {
   hashSaltRounds: Number(getEnv("HASH_SALT_ROUNDS", "10")),
   cookieSecure: getEnv("NODE_ENV", "development") === "production",
   cookieSameSite: (process.env.SAME_SITE || (getEnv("NODE_ENV", "development") === "production" ? "none" : "lax")) as "none" | "lax" | "strict",
-  cookieDomain: resolveCookieDomain(),
 };

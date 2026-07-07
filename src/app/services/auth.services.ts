@@ -12,7 +12,6 @@ const buildCookieOptions = (maxAge?: number): CookieOptions => {
     secure: env.cookieSecure,
     sameSite: env.cookieSameSite,
     path: "/",
-    ...(env.cookieDomain && { domain: env.cookieDomain }),
     ...(maxAge !== undefined && { maxAge }),
   };
 };
