@@ -289,17 +289,15 @@ const refreshAccessToken = async (req: Request, res: Response) => {
 
     if (!session) throw new Error("Revoked");
 
-    // 2. Access token ones
-    if (!accessToken) {
-      return response.error(res, { message: "Access token missing", statusCode: 401, cookie: logout });
-    }
-
-    try {
-      await verifyToken(accessToken, env.accessTokenSecret);
-      return response.success(res, { message: "Token still valid" });
-    } catch (err: any) {
-      if (err.code !== "ERR_JWT_EXPIRED" && err.name !== "JWTExpired") {
-        return response.error(res, { message: "Invalid session", statusCode: 401, cookie: logout });
+    // 2. Access token validation (if present, check if still valid)
+    if (accessToken) {
+      try {
+        await verifyToken(accessToken, env.accessTokenSecret);
+        return response.success(res, { message: "Token still valid" });
+      } catch (err: any) {
+        if (err.code !== "ERR_JWT_EXPIRED" && err.name !== "JWTExpired") {
+          return response.error(res, { message: "Invalid session", statusCode: 401, cookie: logout });
+        }
       }
     }
 
