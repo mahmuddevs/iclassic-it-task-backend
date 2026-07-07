@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"tsc -w\" \"bun --hot src/server.ts\"",
     "build": "tsc",
-    "start": "bun dist/server.js",
+    "start": "bun src/server.ts",
     "seed": "bun src/app/seeds/main.ts"
   },
   "dependencies": {
