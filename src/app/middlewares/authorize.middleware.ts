@@ -16,10 +16,30 @@ export const authorize = (requiredPermission?: string) => {
       });
     }
 
+    let payload;
     try {
       // 1. Verify the access token
-      const payload = await verifyToken(accessToken, env.accessTokenSecret);
+      payload = await verifyToken(accessToken, env.accessTokenSecret);
+    } catch (err: any) {
+      const isExpired = err?.code === "ERR_JWT_EXPIRED" || err?.name === "JWTExpired" || err?.name === "TokenExpiredError"
 
+      if (isExpired) {
+        return response.error(res, {
+          message: "Session expired. Please log in again.",
+          statusCode: 401,
+          // No cookie clearing — frontend refresh flow will handle token renewal
+        });
+      }
+
+      return response.error(res, {
+        message: "Invalid token. Please log in again.",
+        statusCode: 401,
+        data: { code: "TOKEN_INVALID" },
+        cookie: AuthService.getLogoutCookieConfig(["accessToken", "refreshToken"]),
+      });
+    }
+
+    try {
       // 2. Fetch user with all their role permissions
       const user = await AuthService.getUserWithPermissions(payload.email);
 
@@ -42,21 +62,9 @@ export const authorize = (requiredPermission?: string) => {
 
       next();
     } catch (err: any) {
-      const isExpired = err?.name === "TokenExpiredError"
-
-      if (isExpired) {
-        return response.error(res, {
-          message: "Session expired. Please log in again.",
-          statusCode: 401,
-          // No cookie clearing — frontend refresh flow will handle token renewal
-        });
-      }
-
       return response.error(res, {
-        message: "Invalid token. Please log in again.",
-        statusCode: 401,
-        data: { code: "TOKEN_INVALID" },
-        cookie: AuthService.getLogoutCookieConfig(["accessToken", "refreshToken"]),
+        message: err.message || "Internal server error during authorization.",
+        statusCode: 500,
       });
     }
   };
