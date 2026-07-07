@@ -7,6 +7,7 @@ export interface ISaleItem {
 }
 
 export interface ISale {
+  invoiceId: string;
   products: ISaleItem[];
   grandTotal: number;
   paidAmount: number;

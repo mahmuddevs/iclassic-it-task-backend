@@ -7,10 +7,10 @@ export const buildQuery = <T>(model: Model<T>, queryParams: Record<string, any>)
 
     // 2. Search: $or with case-insensitive regex
     search(searchableFields: string[]) {
-      if (queryParams.searchTerm && searchableFields.length > 0) {
+      if (queryParams.search && searchableFields.length > 0) {
         this.modelQuery = this.modelQuery.find({
           $or: searchableFields.map((field) => ({
-            [field]: { $regex: queryParams.searchTerm, $options: 'i' },
+            [field]: { $regex: queryParams.search, $options: 'i' },
           })),
         });
       }
@@ -20,7 +20,7 @@ export const buildQuery = <T>(model: Model<T>, queryParams: Record<string, any>)
     // 3. Filter: Exact matches and operator conversion (gt, lt, etc.)
     filter() {
       const queryObj = { ...queryParams };
-      const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+      const excludeFields = ['search', 'sort', 'limit', 'page', 'fields'];
 
       // Remove non-filter fields
       excludeFields.forEach((el) => delete queryObj[el]);

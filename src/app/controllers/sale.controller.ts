@@ -118,8 +118,11 @@ export const createSale = async (req: Request, res: Response) => {
     const dueAmount = paidAmount >= grandTotal ? 0 : grandTotal - paidAmount
     const changeAmount = paidAmount >= grandTotal ? paidAmount - grandTotal : 0
 
+    const invoiceId = "INV-" + Date.now().toString().slice(-6) + Math.floor(1000 + Math.random() * 9000);
+
     // Create Sale History record in the DB
     const sale = await Sale.create({
+      invoiceId,
       products: saleItems,
       grandTotal,
       paidAmount,
@@ -131,6 +134,7 @@ export const createSale = async (req: Request, res: Response) => {
 
     const responseData = {
       _id: createdSale._id,
+      invoiceId,
       products: receiptProducts,
       grandTotal,
       paidAmount,
@@ -162,6 +166,7 @@ export const getAllSales = async (req: Request, res: Response) => {
     query.modelQuery = query.modelQuery.populate("products.product")
 
     const result = await query
+      .search(["invoiceId"])
       .filter()
       .sort()
       .paginate()
@@ -177,6 +182,46 @@ export const getAllSales = async (req: Request, res: Response) => {
     })
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Failed to retrieve sales history"
+    return response.error(res, {
+      message: errorMessage,
+      statusCode: 500,
+    })
+  }
+}
+
+// 3. Delete Sale (Delete Record & Optional Rollback Stock)
+export const deleteSale = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const restoreStock = req.query.restoreStock === "true" || req.body?.restoreStock === true || req.body?.restoreStock === "true"
+
+  try {
+    const sale = await Sale.findById(id)
+
+    if (!sale) {
+      return response.error(res, {
+        message: "Sale not found",
+        statusCode: 404,
+      })
+    }
+
+    await Sale.findByIdAndDelete(id)
+
+    if (restoreStock) {
+      const itemsToRollback = sale.products.map((item) => ({
+        productId: item.product.toString(),
+        quantity: item.quantity,
+      }))
+      await rollbackStock(itemsToRollback)
+    }
+
+    return response.success(res, {
+      message: restoreStock
+        ? "Sale deleted and stock restored successfully"
+        : "Sale deleted successfully",
+      statusCode: 200,
+    })
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Failed to delete sale"
     return response.error(res, {
       message: errorMessage,
       statusCode: 500,

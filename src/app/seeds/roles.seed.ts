@@ -18,7 +18,8 @@ export const seedRoles = async () => {
         "products.update",
         "products.delete",
         "sales.create",
-        "sales.read"
+        "sales.read",
+        "sales.delete"
       ]
     }
   });
@@ -34,7 +35,8 @@ export const seedRoles = async () => {
         "products.update",
         "products.delete",
         "sales.create",
-        "sales.read"
+        "sales.read",
+        "sales.delete"
       ]
     }
   });

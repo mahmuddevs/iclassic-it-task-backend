@@ -24,6 +24,11 @@ const SaleItemSchema = new Schema(
 
 const SaleSchema = new Schema<ISale>(
   {
+    invoiceId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     products: {
       type: [SaleItemSchema],
       required: true,
