@@ -1,5 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 import { hashData } from "../utils/hashUtils.js";
+import { env } from "../config/env.js";
 
 const refreshTokenSchema = new Schema({
   userId: {
@@ -14,7 +15,7 @@ const refreshTokenSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: '7d'
+    expires: env.refreshTokenExpiration
   }
 });
 

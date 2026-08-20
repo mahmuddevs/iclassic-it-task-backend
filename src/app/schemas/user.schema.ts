@@ -18,7 +18,6 @@ export const UserSchema = z.object({
     .min(6, "Password must be at least 6 characters long")
     .refine((val) => /[A-Z]/.test(val), "Password must contain at least one uppercase letter.")
     .refine((val) => /[0-9]/.test(val), "Password must contain at least one number."),
-  role: z.string().trim().optional(),
 });
 
 export type UserSchema = z.infer<typeof UserSchema>;

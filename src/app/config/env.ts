@@ -23,7 +23,6 @@ export const env = {
   refreshTokenSecret: required("REFRESH_TOKEN_SECRET"),
   accessTokenExpiration: getEnv("ACCESS_TOKEN_EXPIRATION", "15m"),
   refreshTokenExpiration: getEnv("REFRESH_TOKEN_EXPIRATION", "7d"),
-  cookieExpirationTime: getEnv("REFRESH_TOKEN_EXPIRATION", "7d"),
   hashSaltRounds: Number(getEnv("HASH_SALT_ROUNDS", "10")),
   cookieSecure: getEnv("NODE_ENV", "development") === "production",
   cookieSameSite: (process.env.SAME_SITE || (getEnv("NODE_ENV", "development") === "production" ? "none" : "lax")) as "none" | "lax" | "strict",
